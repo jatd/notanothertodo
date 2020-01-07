@@ -1,0 +1,38 @@
+{
+  "name": "notanothertodo",
+  "version": "1.0.0",
+  "description": "React TODO App",
+  "main": "index.js",
+  "scripts": {
+    "dev:server": "nodemon ./server/app.js --exec 'npm run lint && node'",
+    "lint": "eslint ./server/**/*.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jatd/notanothertodo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jatd/notanothertodo/issues"
+  },
+  "homepage": "https://github.com/jatd/notanothertodo#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "sequelize": "^5.21.3",
+    "sqlite": "^3.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "nodemon": "^2.0.2"
+  }
+}
