@@ -1,27 +1,42 @@
+const jwt = require('jsonwebtoken');
 const userService = require('./users.service');
+const config = require('../config/config');
+
+function jwtSignUser(user) {
+  return jwt.sign(user, config.authentication.jwtSecret, {
+    algorithm: 'HS256',
+  });
+}
 
 module.exports = {
   async login(req, res) {
-    const user = await userService.login(req.body);
+    try {
+      const user = await userService.login(req.body);
 
-    if (!user) {
+      if (!user) {
+        return res.status(403).send({
+          error: 'The login information is incorrect',
+        });
+      }
+
+      const { password, ...userWithoutPassword } = user;
+
+      if (password === req.body.password) {
+        return res.status(403).send({
+          error: 'The login information is incorrect',
+        });
+      }
+
+      const userJson = userWithoutPassword.toJSON();
+      return res.send({
+        user: userJson,
+        token: jwtSignUser(userJson),
+      });
+    } catch (err) {
+      console.error(err);
       return res.status(403).send({
-        error: 'The login information is incorrect',
+        error: 'An error has occured trying to log in',
       });
     }
-
-    req.session.userId = user.id;
-    const { password, ...userWithoutPassword } = user;
-    return res.send(userWithoutPassword.toJSON());
-  },
-
-  async logout(req, res) {
-    return res.session.destroy(err => {
-      if (err) {
-        return res.redirect('/');
-      }
-      res.clearCookie(process.env.SESS_NAME || 'sid');
-      res.direct('/login');
-    });
   },
 };

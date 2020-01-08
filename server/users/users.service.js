@@ -1,12 +1,11 @@
 const { User } = require('../models');
 
 module.exports = {
-  async login({ email, password }) {
+  async login({ email }) {
     try {
       return User.findOne({
         where: {
           email,
-          password,
         },
       });
     } catch (err) {

@@ -1,5 +1,3 @@
-const TWO_HOURS = 1000 * 60 * 60 * 2;
-
 module.exports = {
   port: process.env.PORT || 3000,
   db: {
@@ -12,5 +10,7 @@ module.exports = {
       storage: './notanotherdb.sqlite',
     },
   },
-  sess_lifetime: TWO_HOURS,
+  authentication: {
+    jwtSecret: process.env.JWT_SECRET || 'secret',
+  },
 };
