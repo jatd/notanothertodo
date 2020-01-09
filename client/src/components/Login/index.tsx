@@ -4,17 +4,34 @@ import { Form, Field, Formik } from 'formik';
 import { AntInput } from '../Ant-Input';
 import * as Yup from 'yup';
 import api from '../../services/api';
-
+import { AuthContext } from '../../providers/AuthProvider';
+import { LoginProps } from '../../providers/AuthProvider';
 import * as styles from './styles.scss';
+import { useHistory } from 'react-router-dom';
 
 interface LoginFormValues {
   email: string;
   password: string;
 }
 
-export default function Login() {
-  const handleSubmit = (values: LoginFormValues) => {
-    return api().post('http://localhost:3000/users/login', { ...values });
+const Login: React.FunctionComponent = () => {
+  const { login } = React.useContext(AuthContext);
+  const history = useHistory();
+
+  const handleSubmit = async (values: LoginFormValues) => {
+    try {
+      const userData: LoginProps = await api().post(
+        'http://localhost:3000/users/login',
+        {
+          ...values,
+        },
+      );
+
+      login && login(userData);
+      history.push('/todos');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const LoginSchema = Yup.object().shape({
@@ -59,4 +76,6 @@ export default function Login() {
       </Card>
     </div>
   );
-}
+};
+
+export default Login;
