@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "jsx": "react",
+    "watch": true,
+    "target": "es6",
+    "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": false,
+    "skipLibCheck": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+  },
+
+  "exclude": ["node_modules", "webpack"]
+}

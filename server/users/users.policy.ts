@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = (req, res, next) => {
+module.exports = (req: any, res: any, next: any) => {
   const schema = {
     email: Joi.string().email(),
     password: Joi.string(),

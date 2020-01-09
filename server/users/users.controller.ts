@@ -2,14 +2,14 @@ const jwt = require('jsonwebtoken');
 const userService = require('./users.service');
 const config = require('../config/config');
 
-function jwtSignUser(user) {
+function jwtSignUser(user: string) {
   return jwt.sign(user, config.authentication.jwtSecret, {
     algorithm: 'HS256',
   });
 }
 
 module.exports = {
-  async login(req, res) {
+  async login(req: any, res: any) {
     try {
       const user = await userService.login(req.body);
 
@@ -19,17 +19,10 @@ module.exports = {
         });
       }
 
-      const { password, ...userWithoutPassword } = user;
+      const userJson = JSON.stringify(user);
 
-      if (password === req.body.password) {
-        return res.status(403).send({
-          error: 'The login information is incorrect',
-        });
-      }
-
-      const userJson = userWithoutPassword.toJSON();
       return res.send({
-        user: userJson,
+        user,
         token: jwtSignUser(userJson),
       });
     } catch (err) {
