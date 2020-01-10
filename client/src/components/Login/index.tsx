@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { Card, Button } from 'antd';
 import { Form, Field, Formik } from 'formik';
-import { AntInput } from '../Ant-Input';
+import { AntInput } from '../Ant-Fields';
 import * as Yup from 'yup';
 import api from '../../services/api';
 import { AuthContext } from '../../providers/AuthProvider';
 import { LoginProps } from '../../providers/AuthProvider';
-import * as styles from './styles.scss';
 import { useHistory } from 'react-router-dom';
+import * as styles from './styles.scss';
 
 interface LoginFormValues {
   email: string;
   password: string;
+}
+
+interface FetchedLoginData {
+  data: LoginProps;
 }
 
 const Login: React.FunctionComponent = () => {
@@ -20,15 +24,15 @@ const Login: React.FunctionComponent = () => {
 
   const handleSubmit = async (values: LoginFormValues) => {
     try {
-      const userData: LoginProps = await api().post(
+      const { data }: FetchedLoginData = await api().post(
         'http://localhost:3000/users/login',
         {
           ...values,
         },
       );
 
-      login && login(userData);
-      history.push('/todos');
+      login(data);
+      history.push('/');
     } catch (err) {
       console.log(err);
     }
@@ -58,14 +62,12 @@ const Login: React.FunctionComponent = () => {
                   component={AntInput}
                   name="email"
                   type="email"
-                  label="Email"
                   placeholder="Email"
                 />
                 <Field
                   component={AntInput}
                   name="password"
                   type="password"
-                  label="Password"
                   placeholder="Password"
                 />
                 <Button htmlType="submit">Submit</Button>

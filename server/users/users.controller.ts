@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 const jwt = require('jsonwebtoken');
 const userService = require('./users.service');
 const config = require('../config/config');
@@ -9,7 +11,7 @@ function jwtSignUser(user: string) {
 }
 
 module.exports = {
-  async login(req: any, res: any) {
+  async login(req: Request, res: Response) {
     try {
       const user = await userService.login(req.body);
 

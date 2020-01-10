@@ -1,12 +1,6 @@
 import * as React from 'react';
 
-type ContextProps = {
-  isLoggedIn: () => void | string;
-  login: (loginProps: LoginProps) => any;
-  logout: () => void;
-};
-
-export const AuthContext = React.createContext<Partial<ContextProps>>({});
+export const AuthContext = React.createContext<Partial<any>>({});
 
 interface User {
   id: number;
@@ -21,10 +15,10 @@ export interface LoginProps {
 export default function AuthProvider(props: any) {
   const [authState, setAuthState] = React.useState<LoginProps>({});
 
-  const isLoggedIn = () => authState.token;
+  const isLoggedIn = () => sessionStorage.getItem('token') || '';
 
   const login = (loginProps: LoginProps) => {
-    console.log('logging in');
+    sessionStorage.setItem('user', JSON.stringify(loginProps.user));
     sessionStorage.setItem('token', loginProps.token || '');
     setAuthState({ ...authState, ...loginProps });
   };
@@ -37,6 +31,7 @@ export default function AuthProvider(props: any) {
         isLoggedIn,
         login,
         logout,
+        user: authState.user,
       }}
     >
       {props.children}
