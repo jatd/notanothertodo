@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, DatePicker, Select } from 'antd';
 
 const FormItem = Form.Item;
 
@@ -8,10 +8,13 @@ interface AntComponentProps {
   form: any;
   hasFeedback: boolean;
   label: string;
-  selectOptions: Array<Object>;
   submitCount: Number;
   type: string;
+  selectOptions: any;
 }
+
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const CreateAntField = (AntComponent: any) => ({
   field,
@@ -20,6 +23,7 @@ const CreateAntField = (AntComponent: any) => ({
   label,
   submitCount,
   type,
+  selectOptions,
   ...props
 }: AntComponentProps) => {
   const touched = form.touched[field.name];
@@ -39,6 +43,7 @@ const CreateAntField = (AntComponent: any) => ({
         }
         help={submittedError || touchedError ? hasError : false}
         validateStatus={submittedError || touchedError ? 'error' : 'success'}
+        label={label}
       >
         <AntComponent
           {...field}
@@ -46,10 +51,18 @@ const CreateAntField = (AntComponent: any) => ({
           type={type}
           onBlur={onBlur}
           onChange={type ? onInputChange : onChange}
-        ></AntComponent>
+        >
+          {selectOptions &&
+            selectOptions.map((name: any) => (
+              <Option key={name}>{name}</Option>
+            ))}
+        </AntComponent>
       </FormItem>
     </div>
   );
 };
 
+export const AntSelect = CreateAntField(Select);
+export const AntDatePicker = CreateAntField(DatePicker);
 export const AntInput = CreateAntField(Input);
+export const AntRangePicker = CreateAntField(RangePicker);

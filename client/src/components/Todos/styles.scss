@@ -1,0 +1,74 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.todosCard {
+  width: 600px;
+}
+
+.todoItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  i {
+    &:hover {
+      color: red;
+    }
+  }
+
+  i:first-child {
+    margin-right: 1rem;
+  }
+
+  i:nth-last-child(2) {
+    margin-right: 1.5rem;
+  }
+
+  &_icons {
+    padding-left: 1rem;
+    display: flex;
+    margin-left: auto;
+    cursor: pointer;
+  }
+}
+
+.form {
+  button {
+    margin-top: 1.5rem;
+  }
+}
+
+.openModalButton {
+  position: sticky !important;
+  bottom: 2rem;
+  width: 100%;
+
+  @media screen and (max-width: 800px) {
+    opacity: 0.8;
+  }
+}
+
+.todoFilter {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.popoverBody {
+  display: flex;
+  flex-direction: column;
+  &_select {
+    margin-bottom: 1rem;
+  }
+}
+
+.filterButtons {
+  button {
+    margin-right: 0.5rem;
+  }
+}

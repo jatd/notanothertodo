@@ -1,4 +1,4 @@
-const express = require('express');
+import * as express from 'express';
 const UserController = require('./users.controller');
 const UserPolicy = require('./users.policy');
 
