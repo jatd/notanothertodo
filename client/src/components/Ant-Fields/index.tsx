@@ -14,6 +14,7 @@ interface AntComponentProps {
 }
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const CreateAntField = (AntComponent: any) => ({
   field,
@@ -64,3 +65,4 @@ const CreateAntField = (AntComponent: any) => ({
 export const AntSelect = CreateAntField(Select);
 export const AntDatePicker = CreateAntField(DatePicker);
 export const AntInput = CreateAntField(Input);
+export const AntRangePicker = CreateAntField(RangePicker);

@@ -1,7 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   ManyToOne,
   Check,
   BaseEntity,
@@ -10,7 +10,7 @@ import { User } from '../../users/model/user.entity';
 
 @Entity()
 export class Todo extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({

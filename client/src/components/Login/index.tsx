@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Card, Button } from 'antd';
 import { Form, Field, Formik } from 'formik';
 import { AntInput } from '../Ant-Fields';
-import * as Yup from 'yup';
 import api from '../../services/api';
 import { AuthContext } from '../../providers/AuthProvider';
 import { LoginProps } from '../../providers/AuthProvider';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
 import * as styles from './styles.scss';
 
 interface LoginFormValues {

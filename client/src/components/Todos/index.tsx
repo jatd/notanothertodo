@@ -1,24 +1,22 @@
 import * as React from 'react';
-import { Card, List, Button, Modal, Icon, Spin } from 'antd';
-import { AntInput, AntDatePicker, AntSelect } from '../Ant-Fields';
-import { Form, Field, Formik, FormikHelpers } from 'formik';
-import { TodosContext, Todo } from '../../providers/TodosProvider';
 import * as moment from 'moment';
-import TodoItem from './TodoItem';
+
+import { TodosContext, Todo } from '../../providers/TodosProvider';
 import api from '../../services/api';
-import * as Yup from 'yup';
+
+//Components
+import { FormikHelpers } from 'formik';
+import { Card, List, Button, Modal, Icon, Spin } from 'antd';
+import TodoItem from './TodoItem';
+import TodoForm from './TodoForm';
+import TodoFilter from './TodoFilter';
+
 import * as styles from './styles.scss';
 
-interface FormValues {
+export interface FormValues {
   description: string;
   duedate: moment.Moment;
   state: string;
-}
-
-interface TodoState {
-  visible: boolean;
-  editTodo: Todo;
-  isLoading: boolean;
 }
 
 const Todos: React.FunctionComponent = () => {
@@ -27,16 +25,16 @@ const Todos: React.FunctionComponent = () => {
     addTodo,
     removeTodo,
     updateTodos,
+    toggleEditMode,
+    toggleModal,
     todos,
+    editTodo,
+    isModalOpen,
+    isLoading,
+    filters,
   } = React.useContext(TodosContext);
 
   const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-
-  const [state, setState] = React.useState<TodoState>({
-    visible: false,
-    editTodo: null,
-    isLoading: true,
-  });
 
   React.useEffect(() => {
     fetchAllTodos();
@@ -48,16 +46,39 @@ const Todos: React.FunctionComponent = () => {
         params: user,
       });
       initializeTodoState(data.data.todos);
-      setState({
-        ...state,
-        isLoading: false,
-      });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const deleteTodo = async (id: string) => {
+  const handleSubmit = async (
+    values: FormValues,
+    { resetForm }: FormikHelpers<FormValues>,
+  ) => {
+    try {
+      if (!editTodo) {
+        const { data }: any = await api().post('/todos', {
+          ...values,
+          user,
+        });
+        addTodo(data.todo);
+      } else {
+        const { data }: any = await api().put(`/todos/${editTodo.id}`, {
+          ...values,
+        });
+
+        updateTodos(data.todo[0]);
+        toggleEditMode();
+      }
+
+      toggleModal(false);
+    } catch (err) {
+      console.log(err);
+    }
+    resetForm();
+  };
+
+  const deleteTodo = async (id: number) => {
     try {
       const data = await api().delete(`/todos/${id}`);
       if (data.status === 204) {
@@ -68,85 +89,46 @@ const Todos: React.FunctionComponent = () => {
     }
   };
 
-  const editTodo = (todo: Todo) => {
-    setState({
-      ...state,
-      editTodo: todo,
-    });
-  };
-
-  const showModal = () => {
-    setState({
-      ...state,
-      visible: true,
-    });
-  };
-
-  const hideModal = () => {
-    setState({
-      ...state,
-      visible: false,
-      editTodo: null,
-    });
-  };
-
-  const handleSubmit = async (
-    values: FormValues,
-    { resetForm }: FormikHelpers<FormValues>,
-  ) => {
-    try {
-      hideModal();
-
-      if (!state.editTodo) {
-        const { data }: any = await api().post('/todos', {
-          ...values,
-          user,
-        });
-        return addTodo(data.todo);
-      }
-
-      const { data }: any = await api().put(`/todos/${state.editTodo.id}`, {
-        ...values,
-      });
-
-      if (data) {
-        updateTodos(data.todo[0]);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    resetForm();
-  };
-
-  if (state.isLoading) {
+  if (isLoading) {
     return (
       <div className={styles.wrapper}>
         <Spin />
       </div>
     );
   }
-  const todoDescriptions = todos
+  let filteredTodos = filters.state_filter
+    ? todos.filter((todo: Todo) => todo.state === filters.state_filter)
+    : todos;
+
+  filteredTodos =
+    filters.duedate_filter.length === 2
+      ? filteredTodos.filter((todo: Todo) =>
+          moment(todo.duedate).isBetween(
+            filters.duedate_filter[0],
+            filters.duedate_filter[1],
+          ),
+        )
+      : filteredTodos;
+
+  const todoDescriptions = filteredTodos
     .sort((a: any, b: any) => moment(a.duedate).diff(moment(b.duedate)))
     .map((todo: Todo) => (
-      <TodoItem todo={todo} deleteTodo={deleteTodo} editTodo={editTodo} />
+      <TodoItem
+        todo={todo}
+        deleteTodo={deleteTodo}
+        editTodo={toggleEditMode}
+        toggleModal={toggleModal}
+      />
     ));
 
   const data = [...todoDescriptions];
 
-  const TodosSchema = Yup.object().shape({
-    description: Yup.string().required('Required'),
-    duedate: Yup.date().required('Required'),
-  });
-
-  const initalValues = {
-    description: state.editTodo ? state.editTodo.description : '',
-    duedate: state.editTodo ? moment(state.editTodo.duedate) : moment(),
-    state: state.editTodo ? state.editTodo.state : 'Todo',
-  };
-
   return (
     <div className={styles.wrapper}>
-      <Card title="My TODO List" className={styles.todosCard}>
+      <Card
+        title={<TodoFilter title="My TODO List" />}
+        className={styles.todosCard}
+      >
         <List
           size="large"
           bordered
@@ -155,53 +137,21 @@ const Todos: React.FunctionComponent = () => {
         />
         <br />
         <Modal
-          title={!state.editTodo ? 'Create Todo' : 'Edit Todo'}
-          visible={state.visible || state.editTodo ? true : false}
+          title={!editTodo ? 'Create Todo' : 'Edit Todo'}
+          visible={isModalOpen}
           okText={'Add Todo'}
-          onCancel={hideModal}
+          onCancel={() => {
+            toggleEditMode();
+            toggleModal(false);
+          }}
           footer={null}
         >
-          <Formik
-            enableReinitialize
-            initialValues={initalValues}
-            validationSchema={TodosSchema}
-            onSubmit={handleSubmit}
-            render={() => {
-              return (
-                <Form className={styles.form}>
-                  <Field
-                    component={AntInput}
-                    name="description"
-                    type="text"
-                    placeholder="Enter your Todo"
-                    label="Description"
-                  />
-                  <br />
-                  <Field
-                    component={AntDatePicker}
-                    name="duedate"
-                    placeholder="Enter due date"
-                    label="Due Date"
-                  />
-                  <br />
-                  <Field
-                    component={AntSelect}
-                    name="state"
-                    selectOptions={['Todo', 'In-Progress', 'Done']}
-                    label="State of Todo"
-                  />
-                  <Button htmlType="submit" type="danger">
-                    {!state.editTodo ? 'Add' : 'Edit'}
-                  </Button>
-                </Form>
-              );
-            }}
-          />
+          <TodoForm handleSubmit={handleSubmit} editTodo={editTodo} />
         </Modal>
         <Button
           size="large"
           type="primary"
-          onClick={showModal}
+          onClick={() => toggleModal(true)}
           className={styles.openModalButton}
         >
           <Icon type="plus" />

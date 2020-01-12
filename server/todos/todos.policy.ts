@@ -2,7 +2,6 @@ import * as Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
 module.exports = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.body);
   const schema = {
     description: Joi.string(),
     duedate: Joi.date(),

@@ -38,7 +38,7 @@
 
 .form {
   button {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
 }
 
@@ -49,5 +49,26 @@
 
   @media screen and (max-width: 800px) {
     opacity: 0.8;
+  }
+}
+
+.todoFilter {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.popoverBody {
+  display: flex;
+  flex-direction: column;
+  &_select {
+    margin-bottom: 1rem;
+  }
+}
+
+.filterButtons {
+  button {
+    margin-right: 0.5rem;
   }
 }

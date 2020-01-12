@@ -5,19 +5,31 @@ import * as styles from './styles.scss';
 
 interface TodoItemProps {
   todo: Todo;
-  deleteTodo: (id: string) => {};
+  deleteTodo: (id: number) => {};
   editTodo: (todo: Todo) => void;
+  toggleModal: (isModalOpen: boolean) => void;
 }
 
 export default function TodoItem(props: TodoItemProps) {
-  const { todo, deleteTodo, editTodo } = props;
+  const { todo, deleteTodo, editTodo, toggleModal } = props;
   return (
     <div className={styles.todoItem}>
       {todo.state === 'Done' && <Icon type="check" />}
       <div>{todo.description}</div>
       <div className={styles.todoItem_icons}>
-        <Icon type="edit" onClick={() => editTodo(todo)} />
-        <Icon type="close" onClick={() => deleteTodo(todo.id)} />
+        <Icon
+          type="edit"
+          onClick={() => {
+            editTodo(todo);
+            toggleModal(true);
+          }}
+        />
+        <Icon
+          type="close"
+          onClick={() => {
+            deleteTodo(todo.id);
+          }}
+        />
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ module.exports = {
   async findAll(req: Request, res: Response) {
     try {
       const todos = await todosService.findAll(req.query);
-
       return res.send({
         todos,
       });
@@ -20,7 +19,6 @@ module.exports = {
   async create(req: Request, res: Response) {
     try {
       const todo = await todosService.create(req.body);
-
       return res.send({
         todo,
       });
