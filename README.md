@@ -1,4 +1,4 @@
-# notanothertodo
+# Not Another TODO
 
 React Typescript Nodejs TODO app
 
