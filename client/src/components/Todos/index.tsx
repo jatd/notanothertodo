@@ -96,6 +96,7 @@ const Todos: React.FunctionComponent = () => {
       </div>
     );
   }
+
   let filteredTodos = filters.state_filter
     ? todos.filter((todo: Todo) => todo.state === filters.state_filter)
     : todos;
