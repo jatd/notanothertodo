@@ -22,7 +22,7 @@ Clone this repository and run npm install.
 
 Use these credentials to start creating todos:
 
-user01@gmail.com;
-superdupersecure01;
+"user01@gmail.com"
+"superdupersecure01"
 
 ![](demo.gif)
