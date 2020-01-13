@@ -1,8 +1,13 @@
 import express = require('express');
 import { createConnection } from 'typeorm';
+import { seedDatabase } from './fixtures/seed';
 import 'reflect-metadata';
 
-createConnection().then(() => {
+createConnection().then(async (connection: any) => {
+  if (process.env.NODE_ENV === 'test') {
+    console.log('Seeding database...');
+    return seedDatabase(connection);
+  }
   const config = require('./config/config.js');
   const bodyparser = require('body-parser');
   const cors = require('cors');

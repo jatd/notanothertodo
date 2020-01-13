@@ -12,4 +12,4 @@ const RenderApp = () => (
     </TodoProvider>
   </AuthProvider>
 );
-ReactDOM.render(<RenderApp />, document.getElementById('root'));
+ReactDOM.render(<RenderApp />, document.getElementById('app'));

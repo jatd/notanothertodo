@@ -5,10 +5,9 @@
   "main": "dist/bundle.js",
   "scripts": {
     "dev:client": "webpack-dev-server --config ./webpack.config.js --mode development",
-    "dev:server": "nodemon ./server/app.js --exec 'npm run lint && node'",
-    "server": "ts-node-dev --respawn --transpileOnly ./server/app.ts",
+    "dev:server": "NODE_ENV=development ts-node-dev --respawn --transpileOnly ./server/app.ts",
     "lint": "eslint ./server/**/*.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed:db": "NODE_ENV=test ts-node-dev --transpileOnly ./server/app.ts"
   },
   "repository": {
     "type": "git",

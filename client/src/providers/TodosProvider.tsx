@@ -40,6 +40,7 @@ const TodosProvider: React.FunctionComponent = (props: any) => {
   );
 
   const initializeTodoState = (payload: Todo[]) => {
+    setFilters(initialFiltersState);
     return setState({
       ...initialState,
       todos: initialState.todos.concat(payload),
