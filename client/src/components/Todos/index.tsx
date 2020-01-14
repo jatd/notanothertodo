@@ -69,13 +69,13 @@ const Todos: React.FunctionComponent = () => {
 
         updateTodos(data.todo[0]);
         toggleEditMode();
+        resetForm();
       }
 
       toggleModal(false);
     } catch (err) {
       console.log(err);
     }
-    resetForm();
   };
 
   const deleteTodo = async (id: number) => {
